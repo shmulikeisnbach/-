@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 const DAILY_FREE_LIMIT = parseInt(process.env.DAILY_FREE_LIMIT || "10", 10);
 const MAX_PROMPT_CHARS = 12000; // cheap abuse guard - blocks absurdly long injected prompts
 const GEMINI_MODEL = "gemini-3.6-flash";
+
 // In-memory fallback counter (works for local dev / single instance only).
 // In real production on Vercel, set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
 // (free tier at upstash.com) so the counter is shared across serverless invocations.
