@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מנסח הברכות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment: #F3E9D2;
+    --parchment-dark: #E9DBB8;
+    --ink: #2B1D14;
+    --ink-soft: #4A3B2C;
+    --wine: #7A1F2B;
+    --wine-dark: #5E1620;
+    --gold: #A9812E;
+    --gold-light: #C9A552;
+    --forest: #2F4538;
+    --paper-line: rgba(43,29,20,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top left, rgba(169,129,46,0.08), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(122,31,43,0.06), transparent 55%),
+      var(--parchment);
+    color:var(--ink);
+    font-family:'Heebo', sans-serif;
+    min-height:100vh;
+    padding:32px 20px 80px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* Header */
+  header{
+    text-align:center;
+    margin-bottom:36px;
+    position:relative;
+  }
+  .eyebrow-mark{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .eyebrow-mark .line{height:1px;width:56px;background:linear-gradient(90deg, transparent, var(--gold));}
+  .eyebrow-mark .line.rev{background:linear-gradient(270deg, transparent, var(--gold));}
+  .eyebrow-mark svg{width:22px;height:22px;color:var(--gold);}
+  h1{
+    font-family:'Frank Ruhl Libre', serif;
+    font-weight:900;
+    font-size:clamp(34px,5vw,52px);
+    margin:0 0 8px;
+    color:var(--wine-dark);
+    letter-spacing:0.5px;
+  }
+  header p{
+    font-size:16px;
+    color:var(--ink-soft);
+    max-width:480px;
+    margin:0 auto;
+    line-height:1.6;
+  }
+
+  /* Card / scroll panel */
+  .scroll{
+    background:#FBF5E6;
+    border:1px solid var(--paper-line);
+    border-radius:4px;
+    box-shadow:0 1px 2px rgba(43,29,20,0.06), 0 12px 32px -16px rgba(43,29,20,0.22);
+    position:relative;
+    padding:36px 32px;
+    margin-bottom:22px;
+  }
+  .scroll::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:1px solid rgba(169,129,46,0.35);
+    border-radius:2px;
+    pointer-events:none;
+  }
+  .scroll-inner{position:relative;}
+
+  .section-title{
+    font-family:'Frank Ruhl Libre', serif;
+    font-weight:700;
+    font-size:20px;
+    color:var(--wine-dark);
+    margin:0 0 4px;
+  }
+  .section-sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 22px;
+    line-height:1.55;
+  }
+
+  /* API key panel */
+  .key-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .key-row input{flex:1;min-width:220px;}
+  .key-status{
+    font-size:12.5px;
+    display:flex;align-items:center;gap:6px;
+    color:var(--ink-soft);
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:#C9A552;display:inline-block;}
+  .dot.on{background:var(--forest);}
+
+  label{
+    display:block;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:7px;
+  }
+  input[type=text], textarea, select{
+    width:100%;
+    font-family:'Heebo',sans-serif;
+    font-size:15px;
+    padding:11px 13px;
+    background:#fff;
+    border:1px solid rgba(43,29,20,0.18);
+    border-radius:3px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  input[type=text]:focus, textarea:focus, select:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(169,129,46,0.15);
+  }
+  textarea{resize:vertical;min-height:76px;line-height:1.5;}
+
+  .field{margin-bottom:20px;}
+  .field-hint{font-size:12px;color:#8a7a5f;margin-top:5px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:600px){.grid2{grid-template-columns:1fr;}}
+
+  /* Category picker chips */
+  .chip-group{display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{
+    border:1px solid rgba(43,29,20,0.2);
+    background:#fff;
+    padding:9px 16px;
+    border-radius:20px;
+    font-size:13.5px;
+    cursor:pointer;
+    color:var(--ink-soft);
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.active{
+    background:var(--wine-dark);
+    border-color:var(--wine-dark);
+    color:#F3E9D2;
+    font-weight:600;
+  }
+
+  /* Tone slider style */
+  .tone-options{display:flex;gap:9px;flex-wrap:wrap;}
+  .tone-opt{
+    flex:1;min-width:140px;
+    border:1px solid rgba(43,29,20,0.18);
+    border-radius:4px;
+    padding:13px 14px;
+    cursor:pointer;
+    background:#fff;
+    transition:all .15s ease;
+  }
+  .tone-opt:hover{border-color:var(--gold-light);}
+  .tone-opt.active{
+    border-color:var(--forest);
+    background:rgba(47,69,56,0.06);
+  }
+  .tone-opt .t-title{font-weight:700;font-size:14px;margin-bottom:3px;color:var(--ink);}
+  .tone-opt .t-desc{font-size:12px;color:var(--ink-soft);line-height:1.4;}
+
+  /* Toggle switch */
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(169,129,46,0.08);
+    border:1px solid rgba(169,129,46,0.25);
+    border-radius:4px;
+    padding:14px 16px;
+  }
+  .toggle-row .t-label{font-weight:600;font-size:14px;}
+  .toggle-row .t-sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .switch{
+    position:relative;width:44px;height:24px;flex-shrink:0;
+    background:#d8c9a3;border-radius:20px;cursor:pointer;
+    transition:background .18s ease;
+  }
+  .switch.on{background:var(--forest);}
+  .switch .knob{
+    position:absolute;top:2px;right:2px;width:20px;height:20px;
+    background:#fff;border-radius:50%;
+    transition:transform .18s ease;
+    box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  }
+  .switch.on .knob{transform:translateX(-20px);}
+
+  .acrostic-field{
+    margin-top:14px;
+    display:none;
+  }
+  .acrostic-field.show{display:block;}
+
+  /* Generate button */
+  .generate-btn{
+    width:100%;
+    background:var(--wine-dark);
+    color:#F6ECD6;
+    font-family:'Frank Ruhl Libre', serif;
+    font-weight:700;
+    font-size:18px;
+    padding:16px;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    transition:background .15s ease, transform .1s ease;
+    letter-spacing:0.3px;
+  }
+  .generate-btn:hover{background:#6B1A24;}
+  .generate-btn:active{transform:scale(0.995);}
+  .generate-btn:disabled{opacity:0.55;cursor:not-allowed;}
+  .generate-btn svg{width:19px;height:19px;}
+
+  .spinner{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(246,236,214,0.35);
+    border-top-color:#F6ECD6;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Result panel */
+  .result-panel{display:none;}
+  .result-panel.show{display:block;}
+  .result-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:16px;
+  }
+  .result-text{
+    font-family:'Frank Ruhl Libre', serif;
+    font-size:19px;
+    line-height:1.9;
+    color:var(--ink);
+    text-align:justify;
+    white-space:pre-wrap;
+    padding:22px 4px;
+    border-top:1px solid rgba(169,129,46,0.35);
+    border-bottom:1px solid rgba(169,129,46,0.35);
+  }
+  .result-text .rline{
+    display:block;
+    margin-bottom:14px;
+  }
+  .result-text .rline:last-child{margin-bottom:0;}
+  .result-text .rline.rline-name{
+    text-align:center;
+    font-size:30px;
+    font-weight:900;
+    color:var(--wine-dark);
+    margin:6px 0 2px;
+  }
+  .result-text .rline.rline-title{
+    text-align:center;
+    font-size:16px;
+    font-weight:500;
+    color:var(--gold);
+    margin-bottom:14px;
+    letter-spacing:1px;
+  }
+  .result-text .rline.rline-signature{
+    text-align:center;
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-top:6px;
+    font-style:italic;
+  }
+  .acrostic-flag{
+    margin-top:14px;
+    font-size:12.5px;
+    padding:9px 12px;
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .acrostic-flag.ok{background:rgba(47,69,56,0.1);color:var(--forest);}
+  .acrostic-flag.bad{background:rgba(122,31,43,0.1);color:var(--wine-dark);}
+
+  .action-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .btn-secondary{
+    flex:1;min-width:130px;
+    background:#fff;
+    border:1px solid rgba(43,29,20,0.2);
+    color:var(--ink);
+    padding:11px 14px;
+    border-radius:3px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    transition:all .15s ease;
+  }
+  .btn-secondary:hover{border-color:var(--gold);background:#FBF5E6;}
+  .btn-secondary svg{width:15px;height:15px;}
+
+  .error-box{
+    display:none;
+    background:rgba(122,31,43,0.08);
+    border:1px solid rgba(122,31,43,0.3);
+    color:var(--wine-dark);
+    padding:13px 15px;
+    border-radius:3px;
+    font-size:13.5px;
+    margin-top:16px;
+    line-height:1.6;
+  }
+  .error-box.show{display:block;}
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:#9a8a6e;
+    margin-top:28px;
+    line-height:1.7;
+  }
+
+  .divider-mark{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin:26px 0;
+    color:var(--gold);
+  }
+  .divider-mark .l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(169,129,46,0.4),transparent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow-mark">
+      <span class="line"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l2.2 6.6H21l-5.4 4 2 6.6L12 15.6 6.4 19.2l2-6.6L3 8.6h6.8z"/></svg>
+      <span class="line rev"></span>
+    </div>
+    <h1>מנסח הברכות</h1>
+    <p>ברכה בנוסח חסידי אותנטי — נבנית בהשראת מאגר אמיתי של ניסוחים, מותאמת אישית לנמען ולאירוע</p>
+  </header>
+
+  <!-- USAGE PANEL -->
+  <div class="scroll">
+    <div class="scroll-inner">
+      <div class="section-title">שימוש חינמי</div>
+      <p class="section-sub" id="usageNote">
+        המערכת פועלת דרך שרת מאובטח - אין צורך במפתח API. יש לך מספר ניסוחים חינמיים ליום. אם תרצה שימוש ללא הגבלה, אפשר להזין למטה מפתח Gemini אישי וחינמי (מ-<a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--wine-dark);">Google AI Studio</a>) - הוא נשמר בזיכרון הדפדפן שלך בלבד ונשלח ישירות דרך השרת שלנו לגוגל, בלי שאנחנו שומרים אותו.
+      </p>
+      <div class="key-row">
+        <input type="text" id="apiKey" placeholder="(רשות) הדבק כאן מפתח Gemini אישי לשימוש ללא הגבלה" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="scroll">
+    <div class="scroll-inner">
+      <div class="section-title">פרטי הברכה</div>
+      <p class="section-sub">כל שדה כאן משפיע ישירות על הניסוח שייבחר ויורכב — ככל שתתן יותר הקשר, הברכה תהיה מדויקת יותר.</p>
+
+      <div class="field">
+        <label>מי הנמען?</label>
+        <div class="chip-group" id="categoryChips"></div>
+      </div>
+
+      <div class="field">
+        <label>סוג הפנייה</label>
+        <div class="chip-group" id="messageTypeChips"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>שם הנמען (לתיאור בברכה)</label>
+          <input type="text" id="recipientName" placeholder="לדוגמה: ר' משה כהן">
+        </div>
+        <div class="field">
+          <label>סוג השמחה / ייעוד הברכה</label>
+          <select id="occasionType">
+            <option value="כללי">כללי / לא צוין</option>
+            <option value="הולדת בן">הולדת בן</option>
+            <option value="הולדת בת">הולדת בת</option>
+            <option value="בר מצווה">בר מצווה</option>
+            <option value="בת מצווה">בת מצווה</option>
+            <option value="חתונה / אירוסין">חתונה / אירוסין</option>
+            <option value="יום הולדת">יום הולדת</option>
+            <option value="הצלחה עסקית / תרומה">הצלחה עסקית / תרומה</option>
+            <option value="מינוי לתפקיד / כהונה חדשה">מינוי לתפקיד / כהונה חדשה</option>
+            <option value="החלמה מחולי">החלמה מחולי</option>
+            <option value="סיום לימוד / הסמכה">סיום לימוד / הסמכה</option>
+            <option value="אחר">אחר (פרט למטה)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>פרטים נוספים על המטרה / האירוע</label>
+        <input type="text" id="purpose" placeholder="לדוגמה: לרגל תרומה להקמת בית מדרש">
+      </div>
+
+      <div class="field">
+        <label>תיאור חופשי — פרטים שכדאי לשלב</label>
+        <textarea id="freeText" placeholder="לדוגמה: תרם משמעותית לבניית האולם החדש, ידוע בענוותנותו ובנתינה בסתר, נהוג לציין את מסירותו לילדי הקהילה..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>מטעם מי הברכה (שורת חתימה)</label>
+        <input type="text" id="signature" placeholder="לדוגמה: חברי בית המדרש, הנהלת הקופה, המשפחה">
+      </div>
+
+      <div class="field">
+        <label>מבנה הברכה</label>
+        <div class="chip-group" id="structureChips"></div>
+        <div class="acrostic-field" id="structureCustomField">
+          <label>פירוט המבנה המותאם אישית</label>
+          <textarea id="structureCustomText" placeholder="לדוגמה: תארים, שם, ציטוט פסוק מתאים, הרחבה, ברכה, חתימה"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>סגנון / רמת פאר</label>
+        <div class="tone-options" id="toneOptions"></div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <div class="t-label">ראשי תיבות משם הנמען (אקרוסטיכון)</div>
+            <div class="t-sub">כל קטע בברכה יפתח באות משמו — אפקט מיוחד ומכובד</div>
+          </div>
+          <div class="switch" id="acrosticSwitch"><div class="knob"></div></div>
+        </div>
+        <div class="acrostic-field" id="acrosticField">
+          <label>האותיות לראשי התיבות (לפי הסדר הרצוי)</label>
+          <input type="text" id="acrosticLetters" placeholder="לדוגמה: משה">
+          <div class="field-hint">אפשר להזין שם מלא, כינוי, או כל צירוף אותיות שתרצה שיפתח כל קטע בברכה</div>
+
+          <div style="margin-top:16px;">
+            <label>היכן ישולבו ראשי התיבות</label>
+            <div class="chip-group" id="acrosticModeChips"></div>
+          </div>
+          <div class="acrostic-field" id="acrosticConceptField">
+            <label>פירוט הקונספט לראשי התיבות</label>
+            <textarea id="acrosticConceptText" placeholder="לדוגמה: כל שורה תשלב ביטוי הקשור לפרנסה, כאשר האות הראשונה מאייתת את השם"></textarea>
+          </div>
+
+          <div style="margin-top:16px;">
+            <label>סיום השורה הפותחת בראשי תיבות</label>
+            <div class="chip-group" id="acrosticEndingChips"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="generate-btn" id="generateBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.2 6.6H21l-5.4 4 2 6.6L12 15.6 6.4 19.2l2-6.6L3 8.6h6.8z"/></svg>
+        <span id="generateBtnText">נסח את הברכה</span>
+      </button>
+
+      <div class="error-box" id="errorBox"></div>
+    </div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div class="scroll result-panel" id="resultPanel">
+    <div class="scroll-inner">
+      <div class="result-header">
+        <div class="section-title" style="margin:0;">הברכה שלך</div>
+      </div>
+      <div class="result-text" id="resultText"></div>
+      <div class="acrostic-flag" id="acrosticFlag" style="display:none;"></div>
+      <div class="action-row">
+        <button class="btn-secondary" id="copyBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="12" height="12" rx="1.5"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+          העתק טקסט
+        </button>
+        <button class="btn-secondary" id="regenBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          וריאציה נוספת
+        </button>
+      </div>
+
+      <div class="field" style="margin-top:18px;">
+        <label>מה לא מצא חן בעיניך? (רשות) — נתקן רק את זה ונשמור על השאר</label>
+        <textarea id="feedbackText" placeholder="לדוגמה: הפסקה השנייה ארוכה מדי, ותחליף את הביטוי 'אור חיינו' - כבר השתמשת בו קודם"></textarea>
+        <button class="btn-secondary" id="fixBtn" style="width:100%;margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 6L9 17l-5-5"/></svg>
+          תקן לפי ההערות
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    פרוטוטייפ להדגמה — הניסוחים נבנים בהשראת מאגר צירופים חסידיים אותנטי, ומורכבים מחדש בכל בקשה על ידי מודל שפה.<br>
+    התוצאה עשויה לדרוש הגהה של אדם המכיר את הסגנון לפני שימוש רשמי.
+  </footer>
+
+</div>
+
+<script>
+const SAMPLES = {"תומך ונגיד": ["ברגשי גיל ושמחה, בלב מלא הערכה, נשגר בזה כוס של ברכה, קדם האי גברא רבא ויקירא, הקים עולה של תורה בהעמדת ישיבתנו המעטירה על תלה מיום היווסדה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "בשיר וקול תודה, נברך נהלל ונשבח, להני צנתרי דדהבי, חכמי לב, אוהבי ד' ותורתו, עמודי היסוד, פועל למען הכלל והפרט בכל עת ללא לאות במסירות נפש, ידיו רב לו בעזרה וסיוע למען יהודי ארץ הקודש, עצותיו מחכימות ומרוממות, פיו יענה חכמה.", "הננו לשגר מעומקא דליבא, ברכת מזלא טבא וגדיא יאה, ידיד כל בית ישראל, הוא האיש אשר אין גומרין עליו את ההלל, אציל המידות ורב תבונות, דבק במדותיו של 'אברהם אבינו' והוא תומך ושותף נאמן לישיבתנו הק', נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "ברגשי גיל ושמחה, בלב מלא הערכה, נשגר בזה כוס של ברכה, להני צנתרי דדהבי, חכמי לב, אוהבי ד' ותורתו, עמודי היסוד, למה נקרא שמם חובב שחיבבו את התורה, אשר נשא ליבם אותם בחכמה והוזילו מכספם ומזהבם לרומם כבוד התורה ולומדיה, ויזכה לראות פירות בעמלו לאורך ימים ושנים.", "מקרב ליבנו ברכותינו אמורות, ברב שירות ותשבחות, קדם האי גברא רבא יקירא, תלמיד חכם אוצר כלי חמדה ותבונה, חריף עמקן ובעל סברא, הקים עולה של תורה בהעמדת ישיבתנו המעטירה על תלה מיום היווסדה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "ברגשי גיל ושמחה, בלב מלא הערכה, נשגר בזה כוס של ברכה, ידיד כל בית ישראל, הוא האיש אשר אין גומרין עליו את ההלל, אציל המידות ורב תבונות, אנשי חיל לרבות ולקבץ פעלים לתורה בכל עת ועונה, ויזכה לראות פירות בעמלו לאורך ימים ושנים.", "ברגשי גיל ושמחה, בלב מלא הערכה, נשגר בזה כוס של ברכה, קמיה האי גברא רבא יקירא, איש חיל ורב פעלים, משען ומבטח לדלים, הקים עולה של תורה בהעמדת ישיבתנו המעטירה על תלה מיום היווסדה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "מקרב ליבנו ברכותינו אמורות, ברב שירות ותשבחות, להני צנתרי דדהבי, חכמי לב, אוהבי ד' ותורתו, עמודי היסוד, למה נקרא שמם חובב שחיבבו את התורה, אשר נשא ליבם אותם בחכמה והוזילו מכספם ומזהבם לרומם כבוד התורה ולומדיה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה."], "תלמיד חכם": ["מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות, אציל המידות ורב תבונות, מוקיר רבנן ורחים רבנן ואיהו גופיה רב רבנן, אשר לא פסק פומיה מגריסה ממש, ידיו לקל אמונה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות, קמיה האי גברא רבא ויקירא, מקים עולה של תורה, ראש וראשון לכל דבר שבקדושה, אשר לא פסק פומיה מגריסה ממש, ידיו לקל אמונה, אשר תורתו מכרזת עליו, פיו יענה חכמה.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות, קמיה האי גברא רבא ויקירא, מקים עולה של תורה, ראש וראשון לכל דבר שבקדושה, זכה רבים וזכה, ומגלגלין זכות ע\"י זכאי וחסיד בכל מעשיו, יושב בשבת תחכמוני, אשר תורתו מכרזת עליו, פיו יענה חכמה.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות, הוא, איש אשר כל אלה לו, אביר המעש וזך הרעיון, ברוך הכשרון, עושה ומעשה, יד ימינה של קהילתינו הקדושה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "מקרב ליבנו ברכותינו אמורות, ברב שירות ותשבחות, אציל המידות ורב תבונות, מוקיר רבנן ורחים רבנן ואיהו גופיה רב רבנן, ממצער דראשית עדי שגשוג דאחרית, הוא בצידון ומצודתו פרוסה בכל הארץ, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות, קמיה האי גברא רבא ויקירא, מקים עולה של תורה, ראש וראשון לכל דבר שבקדושה, זכה רבים וזכה, ומגלגלין זכות ע\"י זכאי וחסיד בכל מעשיו, יושב בשבת תחכמוני, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה.", "מקרב ליבנו ברכותינו אמורות, ברב שירות ותשבחות, אציל המידות ורב תבונות, מוקיר רבנן ורחים רבנן ואיהו גופיה רב רבנן, עושה ומעשה, יד ימינה של קהילתינו הקדושה, אשר תורתו מכרזת עליו, פיו יענה חכמה.", "מקרב ליבנו ברכותינו אמורות, ברב שירות ותשבחות, הוא, איש אשר כל אלה לו, אביר המעש וזך הרעיון, ברוך הכשרון, עושה ומעשה, יד ימינה של קהילתינו הקדושה, נודע שמו לתפארת ולתהילה, בתוך אמוני עם סגולה."], "עסקן ציבורי": ["בלב מלא שמחה והתרגשות הננו לברך בזאת ברכת התודה, קדם האי גברא רבא, איש חסד ואמת אשר גדולתו בענוותנותו, עמוד התווך של ישיבתנו, ידו מושטת לעזר ואחיסמך הנה מה טוב ומה נעים, ולכל אחד ואחד מקבל בסבר פנים מאירים, נודע בשערים לשם ולתהילה במידותיו הנפלאים.", "אות הוקרה והערכה נשגבה, נשגר בזה בהדרת כבוד, קדם האי גברא רבה יקירא, אשר מוסר נפשו שנים רבות לילות כימים במסירות אין קץ למען ישיבתנו המעטירה לרומם ולגדל את ישיבתנו הק' ביד רמה, נודע בשערים לשם ולתהילה במידותיו הנפלאים.", "בשירים ושבחים בעת שמחת איתנים, נטעי נאמנים, קול צהלה ורינה תרננה שפתינו, למעלת כבוד איש חי רב פעלים אהוב על המקום ועל הבריות, מסור בלו\"נ לכל קדשי בית חיינו, עושה לילות כימים למען מוסדותינו הק' בכל עת ועונה, ובפרט הגדיל עשות למען מסע הקדש, נודע שמו הטוב בשערים לתפארת ולתהילה בתוך אמוני עם סגולה.", "בשירים ושבחים בעת שמחת איתנים, נטעי נאמנים, קול צהלה ורינה תרננה שפתינו, לאיש החסד, ידיד כל בית ישראל, מוסר נפשו וליבו לעצה ולתושיה, אשר בזכותו זכינו לקבוע מקום, לתקוע אוהל ולהעמיד יתידות, ידיד הישיבה ועמוד התווך לפעולותיה, נודע שמו הטוב בשערים לתפארת ולתהילה בתוך אמוני עם סגולה.", "ברגשי שמחה ובהתרגשות משגרים אנו בזאת מעומקא דליבא כוס מלא ברכות ואיחולים לבביים, לראש וראשון לכל דבר שבקדושה, העומד בפרץ ובונה את חומות עיר התורה והחסידות, מסור בלו\"נ לכל קדשי בית חיינו, עושה לילות כימים למען מוסדותינו הק' בכל עת ועונה, ובפרט הגדיל עשות למען מסע הקדש, נודע שמו הטוב בשערים לתפארת ולתהילה בתוך אמוני עם סגולה.", "ברגשי שמחה ובהתרגשות משגרים אנו בזאת מעומקא דליבא כוס מלא ברכות ואיחולים לבביים, למעלת כבוד איש חי רב פעלים אהוב על המקום ועל הבריות, ידיו גלילי זהב כספירים מעולפות, בכל פינה שפונים ניכר פעלותיו, משמש בקודש במסירות נפלאה, נודע בשערים לשם ולתהילה במידותיו הנפלאים.", "אות הוקרה והערכה נשגבה, נשגר בזה בהדרת כבוד, במעונו של ידידנו החשוב מלא בכל מדה ומעלה נכונה, אשר מרבה אורה ושמחה בלבבות, ומוסר נפשו למען הכלל והפרט במסירות שאין לה שיעור, אוהב את הבריות ומקרבן לתורה, נודע בשערים לשם ולתהילה במידותיו הנפלאים.", "בלב מלא שמחה והתרגשות הננו לברך בזאת ברכת התודה, קדם ידידינו עוז הבחור המפואר בתורה ויראה, העושה לילות כימים למען יעמוד המשכן על תלו, והכל מתוך שמחת לב ונפש חפצה, נודע שמו הטוב בשערים לתפארת ולתהילה בתוך אמוני עם סגולה."], "אדמור": ["בהדרת קודש ובלב נרגש הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות בשם כל קהל הקודש, פאר היחס מחוטר גבעות עולם, אילנא רברבא, נזר תפארתנו פאר מקדושים, ממנו ישקו העדרים בעמקי תורת הסוד ורזי אור שבעת הימים, נזר תפארתנו פאר מקדושים, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "בהדרת קודש נקדם בברכה את מאיר עינינו ומנתב דרכינו, פאר היחס מחוטר גבעות עולם, אילנא רברבא, נזר תפארתנו פאר מקדושים, מקים עולה של תורה וחסידות, מרומם לבבות ישראל בצפונות התורה, ממנו ישקו כל העדרים במעיינות החכמה, רבים נהנים לאור תורתו, ימים על ימי מלך תוסיף.", "בהורמנא דמלכא ובחדוותא עילאה נשגר בזה מנחת ענ\"י קדם, עטרת תפארת ראשינו מאיר דרכינו ומורה נתיבתינו, מנוע אראלים ואילי תרשישים, מלהיב לבבות ישראל לאביהם שבשמים, צדיק מושל ביראת אלוקים, עטרת תפארת ישראל, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות קדם מע\"כ, רועה נאמן לעדתו, על ישראל הדרתו, פאר מקדושים, מגזע אראלים ואילי תרשישים, רועה נאמן לעדתו, רבים נהנים לאור תורתו, רבים נהנים לאור תורתו, ימים על ימי מלך תוסיף.", "צהלי ורוני יושבת ציון בשיר ורנן נקדם בברכה מרובה, האי גברא רבא ויקירא אספקלריא המאירה מורה דרכינו ומאיר נתיבותינו, לעלות במסילה העולה בית קל, ידע כל הנסתרות דבריו עושים פירות, בסוד תורה הבהיר כאור החמה מזהיר איהו בנציבין ומצודתו פרוסה, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "בהדרת כבוד ובחרדת קודש, נקדם את פני, עמוד האש ההולך לפני המחנה, אור חיינו ומאיר נתיבתינו, רבה דעמיה ומדברנא דאומתיה, לעלות במסילה העולה בית קל, ידע כל הנסתרות דבריו עושים פירות, בסוד תורה הבהיר כאור החמה מזהיר איהו בנציבין ומצודתו פרוסה, רבים נהנים לאור תורתו, ימים על ימי מלך תוסיף.", "מעומקא דליבא הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות מאליפות קדם מע\"כ, עמוד האש ההולך לפני המחנה, אור חיינו ומאיר נתיבתינו, רבה דעמיה ומדברנא דאומתיה, מלהיב לבבות ישראל לאביהם שבשמים, צדיק מושל ביראת אלוקים, עטרת תפארת ישראל, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "בהדרת קודש ובלב נרגש הננו לשגר ברכת מזלא טבא וגדיא יאה בשלל ברכות בשם כל קהל הקודש, האי גברא רבא ויקירא אספקלריא המאירה מורה דרכינו ומאיר נתיבותינו, מלהיב לבבות ישראל לאביהם שבשמים, צדיק מושל ביראת אלוקים, עטרת תפארת ישראל, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות."], "רב ומורה הוראה": ["ברעותא דליבא, ובחדוותא עילאה נשגר ברכותינו, לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, איש חי ורב פעלים לתורה ותבונה, מופלג בחדרי תורה ומרביץ תורה לתפארה, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "ברעותא דליבא, ובחדוותא עילאה נשגר ברכותינו, לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, מאיר פנים לכל המתדפקים על פתחו לשמוע מצוקתם, בדרך ישרה להנחותם, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "מתוככי קרב ליבנו מילתינו אמורה, בהתרגשות מרובה ובזמר ושירה, קדם לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, מאיר פנים לכל המתדפקים על פתחו לשמוע מצוקתם, בדרך ישרה להנחותם, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "ברעותא דליבא, ובחדוותא עילאה נשגר ברכותינו, האי גברא רבא, אוצר כלי חמדה ותבונה, מרגניתא דאיתה ביה טובה, צנא מלא ספרא, חריף עמקן ובעל סברא, איש חי ורב פעלים לתורה ותבונה, מופלג בחדרי תורה ומרביץ תורה לתפארה, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות.", "מתוככי קרב ליבנו מילתינו אמורה, בהתרגשות מרובה ובזמר ושירה, קדם לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, איש חי ורב פעלים לתורה ותבונה, מופלג בחדרי תורה ומרביץ תורה לתפארה, מוכתר בשם טוב ברננה, נודע שם תפארתו לתהילה בתוך אמוני עם סגולה.", "ברעותא דליבא, ובחדוותא עילאה נשגר ברכותינו, האי גברא רבא, אוצר כלי חמדה ותבונה, מרגניתא דאיתה ביה טובה, צנא מלא ספרא, חריף עמקן ובעל סברא, מאיר פנים לכל המתדפקים על פתחו לשמוע מצוקתם, בדרך ישרה להנחותם, מוכתר בשם טוב ברננה, נודע שם תפארתו לתהילה בתוך אמוני עם סגולה.", "מתוככי קרב ליבנו מילתינו אמורה, בהתרגשות מרובה ובזמר ושירה, קדם לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, חכמתו בחוץ תרונה, מרביץ תורה לרבים, מוכתר בשם טוב ברננה, נודע שם תפארתו לתהילה בתוך אמוני עם סגולה.", "מתוככי קרב ליבנו מילתינו אמורה, בהתרגשות מרובה ובזמר ושירה, קדם לאמיץ אונים ורב כח, צנא מלא ספרא, חריף עמקן ובעל סברא, חכמתו בחוץ תרונה, מרביץ תורה לרבים, יאריך ימים על ממלכתו, וינהיג עדתו ברמה שנות רבות ונעימות."]};
+
+const OCCASION_BLESSINGS = {
+  "הולדת בן": "איחול הקשור להולדת הבן: זכייה לגדלו לתורה, לחופה ולמעשים טובים, נחת מכל יוצאי חלציו.",
+  "הולדת בת": "איחול הקשור להולדת הבת: זכייה לגדלה לתורה (חינוך והצנע לכת), לחופה ולמעשים טובים.",
+  "בר מצווה": "איחול הקשור לבר המצווה: שיזכה לגדול להיות תלמיד חכם, ירא שמים, ולהמשיך בדרך אבותיו מתוך שמחה ועילוי מתמיד.",
+  "בת מצווה": "איחול הקשור לבת המצווה: שתזכה לגדול לתפארת בית ישראל, בצניעות וביראת שמים.",
+  "חתונה / אירוסין": "איחול הקשור לחתונה/אירוסין: זכייה להקים בית נאמן בישראל, בית מלא אורה ותורה, מתוך שמחה וחדוות עולם.",
+  "יום הולדת": "איחול הקשור ליום ההולדת: אריכות ימים ושנים טובות, בריאות איתנה והמשך פעילות ברוכה.",
+  "הצלחה עסקית / תרומה": "איחול הקשור להצלחה/תרומה: שיזכה לראות פרי ברכה בעמלו, שהקב״ה ישלם לו כפל וכפלי כפלים על נדיבות ליבו.",
+  "מינוי לתפקיד / כהונה חדשה": "איחול הקשור למינוי: שיזכה להצליח בתפקידו החדש מתוך סייעתא דשמיא, ולהוביל את הציבור בנאמנות ובחכמה.",
+  "החלמה מחולי": "איחול הקשור להחלמה: רפואה שלמה וקרובה, בריאות איתנה ואריכות ימים ושנים טובות.",
+  "סיום לימוד / הסמכה": "איחול הקשור לסיום/הסמכה: שיזכה להמשיך ולהגדיל תורה, ושהישגו זה יהיה שלב בדרך של עוד ועוד עליות.",
+  "כללי": "איחול כללי מכובד: המשך הצלחה, ברכה והרחבת הדעת בכל מעשי ידיו.",
+  "אחר": "התאם איחול מכובד בהתאם לפרטים החופשיים שנמסרו."
+};
+
+const FULL_TEMPLATES = [{"category": "תומך ונגיד", "text": "ברגשי גיל ושמחה, בלב מלא, נשגר בזה מתנה צנועה והערכה, ליחידנו ולתהילה, לידידנו הדגול האי גברא רבא ויקירא, העוסק בצרכי ציבור באמונה, אהוב למעלה ונחמד למטה, מסור בכל לב ונפש יומם ולילה להגדיל תורה ולהאדירה ולהרבות גבולות הקדושה.\n\nהרה\"ח הר\"ר\nאליעזר יחזקאל גרוסמן\nשליט\"א\n\nעמוד התווך של בית מדרשנו\n\nהוא הגבר אשר יוזם מקים ומעודד פעולות החינוך לילדי החמד בבית מדרשנו, ודבריו היוצאים מן הלב מחיים ומאירים לבבות בחורי חמד לתורה תפילה ועבודת ה'.\n\nלרגל השמחה השרויה במעונו, בנישואי בתו תחי' עב\"ג החתן הבחור המופלג מורנו חיים אלעזר גנזוי הי\"ו, מעומק ליבנו נשלח ברכותינו הנאמנות.\n\nיהי רצון שיזכה לראות זיווג יפה ויזכו לבנות בית נאמן בישראל, לראות דורות ישרים ומבורכים בבניין עדי עד, ויזכו הוא ובני ביתו עוד רבות בשנים להגדיל תורה ולהרחיב גבול הקדושה, מתוך הרחבת הדעת, בריות גופא ונהורא מעליא, עושר ואושר כל הימים, אמן.\n\nהמברכים מקרב לב\nחברי בית המדרש \"ברכת אהרן\"\nהגבאים ומתפללי ביהמ\"ד"}, {"category": "עסקן ציבורי", "text": "בלב מלא שמחה והתרגשות הננו לברך בזאת ברכת התודה והוקרה, קדם האי גברא רבה יקירא, איש חסד ואמת אשר גדולתו בענוותנותו, מוסר נפשו שנים רבות לילות כימים במסירות אין קץ למען כלל הציבור, ידו מושטת לעזר ואחיסמך לכל דורש ומבקש, נודע בשערים לשם ולתהילה במידותיו הנפלאים.\n\nה\"ה הר\"ר\nדוד סופר\nשליט\"א\n\nמנהל ישיבתנו הק'\n\nונוו\"ב החשובה העומדת לימינו בכל עת ובמיוחד בעת הזאת בהתמסרותם למען ההצלחה בהערכת הישיבה למשכנה החדש.\n\nבזכות התורה ולומדיה תתברכו בכל תברכו בכל מילי דמיטב בני חיי ומזוני רויחי, ותזכו לראות עמלכם וטרחתכם עולה בפעם, ולעמוד עוד רבות בשנים להגדיל תורה ולהאדירה, ולומדיה יעמוד לכם לראות אושר ועושר בכל אשר תפנו, ברכות ובגשמיות אכי\"ר.\n\nהמברכים מקרב לב בשם תלמידי הישיבה\nהעקב הודלמן"}, {"category": "אדמור", "text": "בהדרת קודש ובחרדת קודש, נקדם את פני עמוד האש ההולך לפני המחנה, אור חיינו ומאיר נתיבתינו, רבה דעמיה ומדברנא דאומתיה, אספקלריא המאירה מורה דרכינו ומאיר נתיבותינו, אשר תורתו מכרזת עליו, ורבים נהנים לאור תורתו הבהיר כאור החמה.\n\nכ\"ק מרן\nאדמו\"ר\nשליט\"א\n\nראש ונשיא ממלכת קופת החסד להיטיב\n\nלרגל בואו לבקר בהיכלו ולערוך שבת קודש לסדר \"ראה אנכי נותן לפניכם היום ברכה\" בתוככי קהילתנו הק' המעטירה, יהא בואכם לברכה, לרוממת קרן התורה והחסידות.\n\nיהי רצון שיזכה תמיד להאיר עינינו ולהשפיע עלינו ועל כל ישראל שפע ברכה והצלחה, ונזכה בקרוב לביאת גואל צדק בב\"א.\n\nהמברכים מעומקא דליבא\nהנהלת הקהילה וחברי הקהילה"}, {"category": "רב ומורה הוראה", "text": "ברעותא דליבא, ובחדוותא עילאה נשגר ברכותינו, קדם הגאון הגדול רבי, האי גברא רבא, אוצר כלי חמדה ותבונה, מרגניתא דאיתה ביה טובה, צנא מלא ספרא, חריף עמקן ובעל סברא, מופלג בחדרי תורה ומרביץ תורה לתפארה, מכתמו מצוקתם, בדרך ישרה להנחותם.\n\nהגאון הגדול רבי\nישעי דוד הלברשטט\nשליט\"א\n\nרב קהילות הקודש רמה ד'3\n\nלרגל השמחה השרויה במעוננו, שמחת ברכות וישועות במעונכם, זו יושפע רוב שמחות וברכות מהוקדשה מתוך גופא ונהורא מעליא, ולהנהיג עדתו בטוב ובנעימים, עוד ינובון בשיבה טובה ורעננים.\n\nכעתירת וברכת הנהלת הקופה"}, {"category": "עסקן ציבורי", "acrostic_demo": true, "text": "ירנו שפתינו שיר ותודה קמיה האי גברא, ורגשות ליבנו על כל מה שתתמכת נסיפרה, סבר פנים יפות ושוחקות לנו הארת, פעולות גדולות ונצורות למעננו פעלת.\n\nהרה\"ח הר\"ר\nיוסף דוד גאלד\nשליט\"א\n\nדלתות נגידים לנו פתחת, ולמען הצלחת המשפחה רבות פעלת, דוקאני ישלם כפליים על כל מה שעשית.\n\nגדולה ותורה יהיה על שולחנכם, אושר ועושר יחולו על ראשכם, לרוב נחת תזכו מכל הצאצאים, דוד ישלח לכם בקרוב זיווגים הגונים.\n\nהמוקירים ומעריכים:\nבני וחתני, הר\"ר סארק רוטמן ומשפחתי"}, {"category": "אדמור", "text": "מתוככי קרב ליבנו מילתנו אמורה, בהתרגשות מרובה וזמור ושירה, קדם האי גברא רבא ויקירא, אוצר כלי חמדה ותבונה, מרגניתא דאיתה ביה טובה, צנא מלא ספרא, חריף עמקן ובעל סברא, איש חי ורב פעלים לתורה ותבונה, נדע שם תפארתו לתהילה, בתוך אמוני עם סגולה.\n\nה\"ה הגאון רבי\nיצחק אייזיק טוביאס\nשליט\"א\n\nרב דקהילת וויזניץ ריבה ד'\n\nלרגל השמחה השרויה במעוננו, שמחת נישואי הבת תחי' עב\"ג שיחי' בשעטו\"מ לפמ\"ט, יהי\"ר שיעלה הזיווג יפה ויזכו לבנות בית נאמן בישראל על אדני התורה והחסידות כדרכי אבותיהם הק', וירוו נחת מהכל וככל יוצ\"ח רב נחת מתוך אושר ועושר גופא ונהורא מעליא, ויזכה להאריך ימים על ממלכתו עד יבוא לציון גואל בב\"א.\n\nהמברכים מקרב לב\nחברי קהל הקודש"}, {"category": "רב ומורה הוראה", "text": "טוב עין הוא יבורך, בעת ישמע קול מצוהלות חתנים, נשגר בזה מנחת תודה, מאת ובשם מצוינית תושבי שכונתינו העמטירה, ואת כבוד החוקרה, את הכבוד ופעילות וחסירות כבירה, לקד מנחת הוקרה, ורודף צדקה וחסד, בכל עת בכל שעה.\n\nה\"ה הרה\"ח הר\"ר\nחיים מאיר השץ\nשליט\"א\n\nפרנס שכונתינו רמה ד'3 בית שמש\n\nלרגל השמחה השרויה במעוננו, שמחת אירוסי הבן שיחי' ענב\"ג שתחי' בשעטו\"מ למז\"ט, מעומק הלב נשלח את ברכותינו הנאמנות בברכות והצלחה במעונם.\n\nיזכה לרוות מהם כל טוב, לחזות בם נכדים דורות ישרים ומבורכים בישראל, לתפארת המשפחה המעטירה, ויזכה לראות בעצמו בברכה ועשירות ברמה מעלה ונהורא מעליא, כה יאמר ה'"}];
+
+const HONORIFIC_MAP = {
+  "תומך ונגיד": `ה"ה הר"ר / הרה"ח`,
+  "תלמיד חכם": `הרה"ג / הרב הגאון`,
+  "עסקן ציבורי": `ה"ה הר"ר / הרה"ח`,
+  "אדמור": `כ"ק אדמו"ר`,
+  "רב ומורה הוראה": `הרה"ג / הגאון`
+};
+
+const MESSAGE_TYPES = [
+  {id:"ברכה", label:"ברכה לשמחה"},
+  {id:"תודה", label:"מכתב תודה"},
+  {id:"הוקרה", label:"הוקרה כללית"},
+];
+
+const CATEGORIES = [
+  {id:"תומך ונגיד", label:"תומך ונגיד"},
+  {id:"תלמיד חכם", label:"תלמיד חכם"},
+  {id:"עסקן ציבורי", label:"עסקן ציבורי"},
+  {id:"אדמור", label:"אדמו״ר"},
+  {id:"רב ומורה הוראה", label:"רב ומורה הוראה"},
+];
+
+const TONES = [
+  {id:"מרוסן", title:"מרוסן ואיתן", desc:"פאר מדוד אך עדיין עשיר, תמציתי יחסית"},
+  {id:"עשיר", title:"עשיר ומפואר", desc:"שפע רב של כינויי כבוד וביטויים מליציים, אורך בינוני-גדול"},
+  {id:"נשגב", title:"נשגב ומכובד ביותר", desc:"רמת הידור מקסימלית ואורך רב, לדמויות בכירות"},
+];
+
+const TONE_GUIDANCE = {
+  "מרוסן": "רמת פאר מדודה - עדיין עשירה בכינויי כבוד (לא פשוטה כלל), אך כל פסקה תהיה קצרה יותר משפט אחד עד שניים.",
+  "עשיר": "רמת פאר גבוהה - זו רמת ברירת המחדל האמיתית של ברכות כאלה: כל פסקה עשירה בכינויי כבוד רבים (2-4 כינויים לפסקה), משפטים ארוכים ומפותחים, שימוש נרחב בביטויי ארמית ולשון חז\"ל. אל תצטמצם למשפט קצר - הפוך כל פסקה לעשירה ומלאה כמו בדוגמאות המלאות שניתנו.",
+  "נשגב": "רמת פאר מקסימלית - פסקאות ארוכות במיוחד, כינויי כבוד רבים ומגוונים, שפה נשגבת וגבוהה ביותר, מתאים לאדמו\"רים ואישים בכירים."
+};
+
+const STRUCTURE_OPTIONS = [
+  {id:"1", label:"תארים, שם, מעמד, סיבה, ברכה"},
+  {id:"2", label:"תארים, שם, מעמד, אישתו, סיבה, ברכה"},
+  {id:"3", label:"תארים, שם, הרחבה, ברכה"},
+  {id:"4", label:"מותאם אישית"},
+];
+
+const ACROSTIC_MODES = [
+  {id:"א", label:"תארים בראשי תיבות, סיבה, ברכה"},
+  {id:"ב", label:"תארים, הרחבה בראשי תיבות, ברכה"},
+  {id:"ג", label:"כל הברכה בראשי תיבות"},
+  {id:"ד", label:"קונספט מותאם אישית"},
+];
+
+const ACROSTIC_ENDINGS = [
+  {id:"א", label:"חרוזים"},
+  {id:"ב", label:"ראשי תיבות פותח וסוגר"},
+  {id:"ג", label:"ראשי תיבות מתחלק (פותח/סוגר)"},
+];
+
+let state = {
+  category: CATEGORIES[0].id,
+  tone: TONES[0].id,
+  acrostic: false,
+  messageType: MESSAGE_TYPES[0].id,
+  structureOption: STRUCTURE_OPTIONS[0].id,
+  acrosticMode: ACROSTIC_MODES[2].id,
+  acrosticEnding: ACROSTIC_ENDINGS[1].id,
+};
+
+let previousOutputs = [];
+
+// Render message type chips
+const msgTypeWrap = document.getElementById('messageTypeChips');
+MESSAGE_TYPES.forEach(t=>{
+  const el = document.createElement('div');
+  el.className = 'chip' + (t.id===state.messageType?' active':'');
+  el.textContent = t.label;
+  el.onclick = ()=>{
+    state.messageType = t.id;
+    [...msgTypeWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+  };
+  msgTypeWrap.appendChild(el);
+});
+
+// Render category chips
+const catWrap = document.getElementById('categoryChips');
+CATEGORIES.forEach(c=>{
+  const el = document.createElement('div');
+  el.className = 'chip' + (c.id===state.category?' active':'');
+  el.textContent = c.label;
+  el.onclick = ()=>{
+    state.category = c.id;
+    [...catWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+  };
+  catWrap.appendChild(el);
+});
+
+// Render structure chips
+const structureWrap = document.getElementById('structureChips');
+const structureCustomField = document.getElementById('structureCustomField');
+STRUCTURE_OPTIONS.forEach(s=>{
+  const el = document.createElement('div');
+  el.className = 'chip' + (s.id===state.structureOption?' active':'');
+  el.textContent = s.label;
+  el.onclick = ()=>{
+    state.structureOption = s.id;
+    [...structureWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+    structureCustomField.classList.toggle('show', state.structureOption === '4');
+  };
+  structureWrap.appendChild(el);
+});
+structureCustomField.classList.toggle('show', state.structureOption === '4');
+
+// Render acrostic mode chips
+const acrosticModeWrap = document.getElementById('acrosticModeChips');
+const acrosticConceptField = document.getElementById('acrosticConceptField');
+ACROSTIC_MODES.forEach(m=>{
+  const el = document.createElement('div');
+  el.className = 'chip' + (m.id===state.acrosticMode?' active':'');
+  el.textContent = `${m.id}. ${m.label}`;
+  el.onclick = ()=>{
+    state.acrosticMode = m.id;
+    [...acrosticModeWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+    acrosticConceptField.classList.toggle('show', state.acrosticMode === 'ד');
+  };
+  acrosticModeWrap.appendChild(el);
+});
+acrosticConceptField.classList.toggle('show', state.acrosticMode === 'ד');
+
+// Render acrostic ending chips
+const acrosticEndingWrap = document.getElementById('acrosticEndingChips');
+ACROSTIC_ENDINGS.forEach(en=>{
+  const el = document.createElement('div');
+  el.className = 'chip' + (en.id===state.acrosticEnding?' active':'');
+  el.textContent = `${en.id}. ${en.label}`;
+  el.onclick = ()=>{
+    state.acrosticEnding = en.id;
+    [...acrosticEndingWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+  };
+  acrosticEndingWrap.appendChild(el);
+});
+
+// Render tone options
+const toneWrap = document.getElementById('toneOptions');
+TONES.forEach(t=>{
+  const el = document.createElement('div');
+  el.className = 'tone-opt' + (t.id===state.tone?' active':'');
+  el.innerHTML = `<div class="t-title">${t.title}</div><div class="t-desc">${t.desc}</div>`;
+  el.onclick = ()=>{
+    state.tone = t.id;
+    [...toneWrap.children].forEach(ch=>ch.classList.remove('active'));
+    el.classList.add('active');
+  };
+  toneWrap.appendChild(el);
+});
+
+// Optional personal API key (bypasses shared daily limit)
+const apiKeyInput = document.getElementById('apiKey');
+
+// Acrostic toggle
+const acrosticSwitch = document.getElementById('acrosticSwitch');
+const acrosticField = document.getElementById('acrosticField');
+acrosticSwitch.onclick = ()=>{
+  state.acrostic = !state.acrostic;
+  acrosticSwitch.classList.toggle('on', state.acrostic);
+  acrosticField.classList.toggle('show', state.acrostic);
+};
+
+function buildSystemPrompt(){
+  const examples = SAMPLES[state.category] || [];
+  const examplesText = examples.map((e,i)=>`דוגמה קצרה ${i+1}: ${e}`).join('\n\n');
+  const fullExamples = FULL_TEMPLATES.filter(t=>t.category===state.category && !t.acrostic_demo).concat(
+    FULL_TEMPLATES.filter(t=>t.category!==state.category && !t.acrostic_demo).slice(0,1)
+  );
+  const fullExamplesText = fullExamples.map((t,i)=>`=== דוגמת ברכה מלאה ${i+1} (מבנה מלא לחיקוי) ===\n${t.text}`).join('\n\n');
+
+  const acrosticDemo = FULL_TEMPLATES.find(t=>t.acrostic_demo);
+  const acrosticExampleText = state.acrostic && acrosticDemo ? `\n\nהנה דוגמה אמיתית לברכה עם ראשי תיבות (שים לב איך כל פסקה פותחת באות הבאה ברצף, ועדיין נשמעת טבעית וזורמת ולא מאולצת):\n${acrosticDemo.text}` : '';
+
+  const structureOpt = STRUCTURE_OPTIONS.find(s=>s.id===state.structureOption) || STRUCTURE_OPTIONS[0];
+  const structureCustomText = document.getElementById('structureCustomText').value.trim();
+  const acrosticModeOpt = ACROSTIC_MODES.find(m=>m.id===state.acrosticMode) || ACROSTIC_MODES[2];
+  const acrosticConceptText = document.getElementById('acrosticConceptText').value.trim();
+  const acrosticEndingOpt = ACROSTIC_ENDINGS.find(e=>e.id===state.acrosticEnding) || ACROSTIC_ENDINGS[1];
+
+  const honorific = HONORIFIC_MAP[state.category] || `ה"ה הר"ר`;
+  const occasionGuide = OCCASION_BLESSINGS[document.getElementById('occasionType').value] || OCCASION_BLESSINGS["כללי"];
+  const msgType = state.messageType;
+  const signature = document.getElementById('signature').value.trim();
+  const toneGuidance = TONE_GUIDANCE[state.tone] || TONE_GUIDANCE["עשיר"];
+
+  let occasionLineInstruction = '';
+  if(msgType === 'תודה'){
+    occasionLineInstruction = `נוסח של תודה: פתח בלשון תודה (למשל "הבעת תודה והוקרה", "מיטב תודתנו נתונה בזאת ל...") על הפעולה/תרומה שצוינה בפרטים, בסגנון המליצי המתאים. פסקה זו יכולה להיות ארוכה - 2-3 משפטים.`;
+  } else if(msgType === 'הוקרה'){
+    occasionLineInstruction = `נוסח של הוקרה כללית: ציין ביטוי הוקרה והערכה כלפי הנמען ופועלו, ללא זיקה לאירוע ספציפי בהכרח. פסקה זו יכולה להיות ארוכה - 2-3 משפטים.`;
+  } else {
+    occasionLineInstruction = `נוסח של ברכה לרגל שמחה: פתח בביטוי כגון "לרגל השמחה השרויה במעונו", "לרגל שמחתו האמיתית וטובה" או דומה לו, המתאים לסוג השמחה שצוין. פסקה זו יכולה להיות ארוכה - 2-3 משפטים.`;
+  }
+
+  let structureInstructions = '';
+  if(structureOpt.id === '1'){
+    structureInstructions = 'המבנה: תארים ופתיחה, שם הנמען, מעמדו/תפקידו, סיבת הברכה (האירוע), ואיחול הברכה. ללא הרחבה נוספת מעבר לכך.';
+  } else if(structureOpt.id === '2'){
+    structureInstructions = 'המבנה: תארים ופתיחה, שם הנמען, מעמדו/תפקידו, ולאחר מכן פסקה קצרה נוספת המזכירה בכבוד גם את רעייתו תחי\' (אם לא ניתן שם לרעיה - התייחס אליה בכינוי כללי כגון "זוגתו החשובה תחי\'"), ולאחר מכן סיבת הברכה (האירוע), ואיחול הברכה.';
+  } else if(structureOpt.id === '3'){
+    structureInstructions = 'המבנה: תארים ופתיחה, שם הנמען, ולאחר מכן פסקת "הרחבה" אחת (משולבת, ללא הפרדה בין מעמד לסיבה) המתארת יחדיו את מעלותיו, מעמדו וסיבת הברכה, ולבסוף איחול הברכה. פסקת ההרחבה יכולה להיות ארוכה ועשירה יותר משאר הפסקאות.';
+  } else {
+    structureInstructions = `המבנה מותאם אישית לפי בקשת המשתמש: ${structureCustomText || 'השתמש במבנה הסטנדרטי המקובל (תארים, שם, מעמד, סיבה, ברכה) אם לא צוין פירוט.'}`;
+  }
+
+  let acrosticSpecialInstructions = '';
+  if(state.acrostic){
+    if(acrosticModeOpt.id === 'א'){
+      acrosticSpecialInstructions = 'ראשי התיבות ישולבו רק בפסקת התארים/הפתיחה של הברכה - שם כל קטע/צירוף בפסקה זו יפתח באות הבאה ברצף. שאר חלקי הברכה (סיבה, ברכה) ייכתבו כרגיל ללא אילוץ ראשי תיבות.';
+    } else if(acrosticModeOpt.id === 'ב'){
+      acrosticSpecialInstructions = 'ראשי התיבות ישולבו רק בפסקת ה"הרחבה"/המעמד של הברכה - שם כל משפט/קטע בפסקה זו יפתח באות הבאה ברצף. פסקת התארים הפותחת ופסקת האיחול הסוגרת ייכתבו כרגיל ללא אילוץ ראשי תיבות.';
+    } else if(acrosticModeOpt.id === 'ג'){
+      acrosticSpecialInstructions = 'ראשי התיבות ישולבו לאורך כל הברכה - בכל אחת מהפסקאות התוכניות (למעט שם הנמען ושורת "שליט\\"א").';
+    } else {
+      acrosticSpecialInstructions = `קונספט מותאם אישית לשילוב ראשי התיבות, כפי שהוגדר על ידי המשתמש: ${acrosticConceptText || 'שלב את ראשי התיבות בטבעיות לאורך הברכה לפי שיקול דעתך.'}`;
+    }
+
+    if(acrosticEndingOpt.id === 'א'){
+      acrosticSpecialInstructions += ' בנוסף, נסה כשניתן שהשורות/הקטעים הנושאים את ראשי התיבות יסתיימו בחריזה נעימה ביניהם (חרוזי סוף), מבלי לפגוע בטבעיות המשפט.';
+    } else if(acrosticEndingOpt.id === 'ב'){
+      acrosticSpecialInstructions += ' בנוסף, בכל קטע כזה - האות הפותחת את הקטע והאות המסיימת אותו (המילה האחרונה) יתאימו יחדיו לרצף אחד: כלומר ראשי התיבות "פותחים וסוגרים" את כל מקטע הטקסט (חלק ראשון של הרצף פותח בתחילת כל קטע, וחלקו השני "סוגר" בסיום כל קטע, כך שקריאת כל האותיות הפותחות ולאחריהן כל האותיות הסוגרות (בסדר הפוך) מאייתת יחדיו את מלוא הצירוף).';
+    } else if(acrosticEndingOpt.id === 'ג'){
+      acrosticSpecialInstructions += ' בנוסף, יש לחלק את רצף האותיות לשני חצאים (מתאים רק למספר אותיות זוגי): המחצית הראשונה של האותיות פותחת כל אחת את תחילת הקטעים הראשונים לפי הסדר, והמחצית השנייה "סוגרת" את סוף אותם קטעים בסדר הפוך (כמו מבנה של פסוקים הפותחים ב"מחצית פותחת" ומסתיימים ב"מחצית סוגרת"), כך שקריאת ראשי הקטעים ולאחריהם סופי הקטעים מאייתת את מלוא הצירוף.';
+    }
+  }
+
+  return `אתה מומחה לניסוח ברכות כבוד בנוסח חסידי-ליטאי מסורתי, בדיוק כפי שנהוג בתעודות ברכה מודפסות אמיתיות (כמו אלה שנתלות במסגרת או מוענקות כתעודה) - בסגנון ארכאי, עשיר ומפואר, עברית-ארמית מעורבת, כינויי כבוד רבים.
+
+הברכות האמיתיות הללו הן **מסמכים עשירים ומלאים** - לא כמה מילים תמציתיות, אלא טקסט זורם ומפואר בהיקף נכבד. הנה קודם כמה ביטויי יסוד אופייניים לקטגוריית "${state.category}":
+
+${examplesText}
+
+ועכשיו הכי חשוב - דוגמאות מלאות של מבנה ברכה שלם בפועל, בדיוק בהיקף ובעושר שאתה נדרש להפיק (שים לב לאורך כל פסקה, לא רק לתוכן, ולזרימה הטבעית של המשפטים):
+
+${fullExamplesText}${acrosticExampleText}
+
+## רמת הפאר המבוקשת: ${state.tone}
+${toneGuidance}
+
+## מבנה הברכה שנבחר על ידי המשתמש:
+${structureInstructions}
+(המבנה הכללי המחייב למטה מפורט לפי ברירת המחדל - התאם אותו לפי הנחיית מבנה זו: אם נדרשת פסקת "אישתו" הוסף אותה כפסקה נוספת בין חלק 4 לחלק 5; אם נדרש מבנה "הרחבה" ממוזג, מזג את חלקים 4 ו-5 לפסקה אחת; אם צוין מבנה מותאם אישית, עקוב אחריו במקום המבנה שלמטה תוך שמירה על שם הנמען ושורת "שליט\"א" כשורות נפרדות.)
+
+## המבנה המחייב - 6 חלקים, כל אחד בשורה/פסקה נפרדת (הפרד ביניהם ב-\\n\\n בפועל):
+
+**חלק 1 - פסקת פתיחה (ארוכה, 2-3 משפטים משולבים למשפט אחד ארוך ומפואר):**
+פתח בביטוי רגשי-מליצי - **בחר ביטוי שונה בכל פעם ואל תמיד את אותו הביטוי**: "ברגשי גיל ושמחה, בלב מלא", "בהדרת קודש ובחרדת קודש", "מעומקא דליבא הננו לשגר", "מתוככי קרב ליבנו מילתנו אמורה", "בלב מלא שמחה והתרגשות", "ברעותא דליבא ובחדוותא עילאה" - הזורם ישירות לתיאור ראשוני של הנמען עם כינויי כבוד עשירים (2-4 כינויים לפחות), בדיוק כמו בדוגמאות המלאות. פסקה זו חייבת להיות עשירה ומפורטת, לא משפט קצר.
+
+**חלק 2 - השם בלבד:**
+שורה נפרדת ובה רק התואר הרשמי "${honorific}" ואחריו שם הנמען (אם ניתן שם - שלב אותו; אם לא ניתן שם, כתוב רק את התואר בלי שם בדוי).
+
+**חלק 3 - "שליט"א" (או תואר מקביל):**
+שורה קצרה נפרדת עם "שליט"א" בלבד (או "שליט"א ומשפ' שיחיו" בהתאם להקשר).
+
+**חלק 4 - תיאור התפקיד/המעלות (יכול להיות 2 משפטים):**
+פסקה נפרדת המתארת את תפקידו, מעמדו ומעלותיו של הנמען בהרחבה, בכינויי כבוד עשירים מהסגנון שנלמד מהדוגמאות המלאות.
+
+**חלק 5 - נוסח האירוע/הפנייה (ארוך, 2-3 משפטים):**
+פסקה נפרדת. ${occasionLineInstruction} שלב כאן בטבעיות את הפרטים הנוספים שנמסרו על ידי המשתמש (מטרה, תיאור חופשי) אם יש כאלה.
+
+**חלק 6 - איחול חתימה (ארוך ועשיר, 2-3 משפטים):**
+פסקה נפרדת עם איחול מכובד, מפורט ומנוסח בטוב טעם, המתאים ספציפית לסוג השמחה/ייעוד. הנחיה לתוכן האיחול: ${occasionGuide} פתח בביטוי כגון "יהי רצון ש..." או "כעתירת וברכת...", ופרוש כמה משאלות/איחולים ולא רק אחד.
+
+${signature ? `**חלק 7 - שורת חתימה:**\nשורה אחרונה נפרדת בנוסח "המברכים מקרב לב" ולאחריה שם החותם: "${signature}".` : ''}
+
+## כללים נוספים לאיכות ולזרימה:
+- שמור בקפדנות על הסגנון הארכאי-חסידי לאורך כל החלקים: משפטים מליציים, ביטויי ארמית-לשון חז"ל, כמו בדוגמאות המלאות למעלה.
+- **אורך כולל**: הברכה השלמה (לא כולל השם ו"שליט\"א") צריכה להיות דומה בהיקפה לדוגמאות המלאות שניתנו - עשירה, ולא תמציתית.
+- **זרימה תחבירית**: כל משפט חייב להיות תקין תחבירית ולהישמע טבעי למי שבקיא בסגנון - לא צירוף מוזר של ביטויים. קרא לעצמך את המשפט לפני שאתה כותב את הבא: האם הוא זורם? האם יש בו נשוא ברור? הימנע מצירופי מילים סתמיים או חסרי משמעות רק כדי למלא מקום.
+- גוון בין כינויי הכבוד השונים - אל תחזור פעמיים על אותו ביטוי בתוך אותה ברכה.
+- אל תשתמש בעברית מודרנית/יומיומית ואל תסביר את עצמך - רק תפוקת הברכה עצמה.
+${state.acrostic ? `- דרישה מיוחדת נוספת לראשי תיבות: האותיות הבאות ברצף חייבות לאיית את הצירוף: "${document.getElementById('acrosticLetters').value.trim()}". ספור אותיות בקפידה. שים לב בדוגמה שניתנה לך כיצד זה נעשה בטבעיות מבלי לפגוע בזרימת המשפט. ${acrosticSpecialInstructions}` : ''}
+
+החזר אך ורק את חלקי הברכה כמפורט, כל אחד בשורה/פסקה נפרדת (מופרדים ב-\\n\\n), ללא כותרות כמו "חלק 1", ללא מירכאות מיותרות, ללא הערות נוספות.`;
+}
+
+function buildUserPrompt(mode){
+  const name = document.getElementById('recipientName').value.trim();
+  const occasion = document.getElementById('occasionType').value;
+  const purpose = document.getElementById('purpose').value.trim();
+  const free = document.getElementById('freeText').value.trim();
+  let parts = [];
+  if(name) parts.push(`שם הנמען: ${name}`);
+  parts.push(`סוג השמחה/ייעוד: ${occasion}`);
+  if(purpose) parts.push(`פרטים נוספים על המטרה/האירוע: ${purpose}`);
+  if(free) parts.push(`פרטים נוספים לשילוב: ${free}`);
+  parts.push(`רמת פאר מבוקשת: ${state.tone}`);
+
+  if(mode === 'fix' && previousOutputs.length){
+    const feedback = document.getElementById('feedbackText').value.trim();
+    parts.push(`\n## חשוב - זו בקשת תיקון ממוקד, לא ניסוח חדש:`);
+    parts.push(`להלן הניסוח האחרון שהופק. שמור על מרביתו כפי שהוא - אל תשנה חלקים שלא התבקשת לשנות, ואל תשנה את מבנה/סגנון/אורך הברכה באופן כללי. תקן אך ורק את הבעיות הספציפיות שהמשתמש ציין למטה, בצורה מדויקת וממוקדת.`);
+    parts.push(`--- הניסוח האחרון ---\n${previousOutputs[previousOutputs.length-1]}`);
+    parts.push(`--- מה לתקן ---\n${feedback || 'שפר את הניסוח מבלי לשנות אותו מהותית.'}`);
+  } else if(previousOutputs.length){
+    parts.push(`\n## חשוב - זו בקשת רענון/וריאציה נוספת:`);
+    parts.push(`להלן הניסוח/ים הקודמים שכבר הופקו לבקשה זו. אל תחזור על אותו מבנה משפט או אותם ביטויים - הפק ניסוח שונה מהותית: שנה את ביטוי הפתיחה, את כינויי הכבוד שנבחרו, את סדר הרעיונות בכל פסקה, ואת מבנה המשפטים. השינוי צריך להיות משמעותי ולא רק החלפת מילה או שתיים באותו מבנה.`);
+    previousOutputs.forEach((prev, i)=>{
+      parts.push(`--- ניסוח קודם ${i+1} ---\n${prev}`);
+    });
+  }
+
+  return parts.join('\n');
+}
+
+
+
+function checkAcrostic(text, letters){
+  if(!letters) return null;
+  // Split into segments by comma or period
+  const segments = text.split(/[,.]/).map(s=>s.trim()).filter(Boolean);
+  const targetLetters = letters.replace(/\s/g,'').split('');
+  let matchCount = 0;
+  for(let i=0;i<targetLetters.length && i<segments.length;i++){
+    if(segments[i][0] === targetLetters[i]) matchCount++;
+  }
+  return {matchCount, total: targetLetters.length};
+}
+
+const generateBtn = document.getElementById('generateBtn');
+const generateBtnText = document.getElementById('generateBtnText');
+const errorBox = document.getElementById('errorBox');
+const resultPanel = document.getElementById('resultPanel');
+const resultText = document.getElementById('resultText');
+const acrosticFlag = document.getElementById('acrosticFlag');
+
+async function generate(mode){
+  const apiKey = apiKeyInput.value.trim(); // optional personal key
+  errorBox.classList.remove('show');
+  if(state.acrostic && !document.getElementById('acrosticLetters').value.trim()){
+    errorBox.textContent = 'בחרת באופציית ראשי תיבות - צריך להזין את האותיות/שם.';
+    errorBox.classList.add('show');
+    return;
+  }
+  if(mode === 'fix' && !previousOutputs.length){
+    errorBox.textContent = 'אין עדיין ניסוח קיים לתקן - קודם נסח ברכה.';
+    errorBox.classList.add('show');
+    return;
+  }
+
+  generateBtn.disabled = true;
+  generateBtnText.innerHTML = mode === 'fix' ? 'מתקן כעת...' : 'מנסח כעת...';
+  generateBtn.querySelector('svg').outerHTML = '<span class="spinner"></span>';
+
+  try{
+    const systemPrompt = buildSystemPrompt();
+    const userPrompt = buildUserPrompt(mode);
+
+    let temperature = 1.0;
+    if(mode === 'fix') temperature = 0.7;
+    else if(previousOutputs.length) temperature = 1.25;
+
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemPrompt,
+        userPrompt,
+        temperature,
+        userApiKey: apiKey || undefined
+      })
+    });
+
+    if(!resp.ok){
+      const errData = await resp.json().catch(()=>({}));
+      throw new Error(errData?.error || `שגיאת שרת (${resp.status})`);
+    }
+
+    const data = await resp.json();
+    const text = (data.text || '').trim();
+    if(!text) throw new Error('לא התקבל טקסט מהמודל - נסה שוב.');
+    if(mode === 'fix' && previousOutputs.length){
+      previousOutputs[previousOutputs.length-1] = text; // replace with corrected version
+      document.getElementById('feedbackText').value = '';
+    } else {
+      previousOutputs.push(text);
+      if(previousOutputs.length > 2) previousOutputs.shift(); // keep last 2 for prompt size sanity
+    }
+
+    // Split into structural lines/paragraphs and render each with appropriate styling
+    const lines = text.split(/\n\s*\n/).map(l=>l.trim()).filter(Boolean);
+    resultText.innerHTML = '';
+    lines.forEach((line, idx)=>{
+      const span = document.createElement('span');
+      const isNameLine = line.length < 60 && (line.includes(document.getElementById('recipientName').value.trim().split(' ').pop()||'\u0000') || /^(ה"ה|הרה"ח|הרה"ג|הר"ר|כ"ק|הגאון)/.test(line)) && idx > 0 && idx < 3;
+      const isTitleLine = /^שליט"א/.test(line) || /^שליט״א/.test(line);
+      const isSignatureLine = /^המברכים/.test(line);
+      if(isTitleLine){
+        span.className = 'rline rline-title';
+      } else if(isSignatureLine){
+        span.className = 'rline rline-signature';
+      } else if(isNameLine){
+        span.className = 'rline rline-name';
+      } else {
+        span.className = 'rline';
+      }
+      span.textContent = line;
+      resultText.appendChild(span);
+    });
+    resultPanel.classList.add('show');
+
+    if(state.acrostic){
+      const letters = document.getElementById('acrosticLetters').value.trim();
+      const check = checkAcrostic(lines.join(', '), letters);
+      if(check){
+        if(check.matchCount === check.total){
+          acrosticFlag.className = 'acrostic-flag ok';
+          acrosticFlag.style.display = 'flex';
+          acrosticFlag.textContent = `✓ ראשי התיבות "${letters}" זוהו במלואם בתחילת הקטעים`;
+        } else {
+          acrosticFlag.className = 'acrostic-flag bad';
+          acrosticFlag.style.display = 'flex';
+          acrosticFlag.textContent = `⚠ זוהתה התאמה חלקית בלבד (${check.matchCount}/${check.total}) - מומלץ ליצור וריאציה נוספת או לערוך ידנית`;
+        }
+      }
+    } else {
+      acrosticFlag.style.display = 'none';
+    }
+
+    resultPanel.scrollIntoView({behavior:'smooth', block:'start'});
+
+  } catch(err){
+    errorBox.textContent = 'אירעה שגיאה: ' + err.message;
+    errorBox.classList.add('show');
+  } finally {
+    generateBtn.disabled = false;
+    generateBtnText.textContent = 'נסח את הברכה';
+    const spinner = generateBtn.querySelector('.spinner');
+    if(spinner) spinner.outerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.2 6.6H21l-5.4 4 2 6.6L12 15.6 6.4 19.2l2-6.6L3 8.6h6.8z"/></svg>';
+  }
+}
+
+generateBtn.onclick = ()=>{ previousOutputs = []; generate('new'); };
+document.getElementById('regenBtn').onclick = ()=> generate('variation');
+document.getElementById('fixBtn').onclick = ()=> generate('fix');
+document.getElementById('copyBtn').onclick = ()=>{
+  navigator.clipboard.writeText(resultText.innerText);
+  const btn = document.getElementById('copyBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ הועתק';
+  setTimeout(()=>{ btn.innerHTML = orig; }, 1500);
+};
+</script>
+</body>
+</html>
